@@ -1,5 +1,6 @@
 <script setup>
-    import { ref } from 'vue'
+    import { onMounted, ref } from 'vue'
+    import { useRoute } from 'vue-router'
     import DataTable from 'primevue/datatable'
     import Column from 'primevue/column'
     import ColumnGroup from 'primevue/columngroup'
@@ -7,6 +8,7 @@
     import Dropdown from 'primevue/dropdown'
     import InputText from 'primevue/inputtext'
     import InputNumber from 'primevue/inputtext'
+    import Button from 'primevue/button'
 
     const rawData = [
         {
@@ -71,9 +73,17 @@
         }
     ]
 
-    const tableData = ref(rawData)
+    const route = useRoute()
+    const tableData = ref()
 
-    const selectedDept = ref('all')
+    const selectedDept = ref(route.params.dept ? route.params.dept : 'all')
+
+    if (selectedDept.value !== 'all') {
+        tableData.value = rawData.filter(line => line.dept === selectedDept.value)
+    } else {
+        tableData.value = rawData
+    }
+
     const depts = ref([
         { name: 'All', code: 'all'},
         { name: 'Turbo', code: 'turbo'},
@@ -122,7 +132,7 @@
         <template #header>
             <div class="flex flex-column">
                 <span class="text-xl text-900 font-bold">Build Schedule</span>
-                <div class="flex">
+                <div class="flex justify-content-between">
                     <Dropdown
                         v-model="selectedDept"
                         :options="depts"
@@ -130,7 +140,11 @@
                         option-label="name"
                         option-value="code"
                         placeholder="Select a Dept"
+                        class=""
                     />
+                    <RouterLink :to="{ name: 'home' }">
+                        <Button label="Home" />
+                    </RouterLink>
                 </div>
             </div>
         </template>
