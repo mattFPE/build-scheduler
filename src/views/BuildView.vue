@@ -1,8 +1,9 @@
 <script setup>
+  import BuildSchedule from '../components/BuildSchedule.vue';
 </script>
 
 <template>
   <main>
-    <p>BUILD!!!</p>
+    <BuildSchedule />
   </main>
 </template>
